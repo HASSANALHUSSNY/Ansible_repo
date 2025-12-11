@@ -1,18 +1,36 @@
 ---
-
-- hosts : all
+- hosts: all
   become: true
   tasks:
+    # Ubuntu tasks
+    - name: update repository index for Ubuntu
+      apt:
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
 
-  - name: update repository index
-    apt:
-      update_cache: yes
+    - name: install apache2 package on Ubuntu
+      apt:
+        name: apache2
+        state: latest
+      when: ansible_distribution == "Ubuntu"
 
-  - name: install apache2 package
-    apt:
-      name: apache2
-      state: latest
-  - name: add php support for apache
-    apt:
-      name: libapache2-mod-php
-      state: latest
+    - name: add php support for apache on Ubuntu
+      apt:
+        name: libapache2-mod-php
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+
+    # CentOS tasks - NO repo update, direct install only
+    - name: install httpd package on CentOS
+      dnf:
+        name: httpd
+        state: present
+        update_cache: no
+      when: ansible_distribution == "CentOS"
+
+    - name: add php support for apache on CentOS
+      dnf:
+        name: php
+        state: present
+        update_cache: no
+      when: ansible_distribution == "CentOS"
