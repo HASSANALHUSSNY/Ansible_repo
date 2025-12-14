@@ -3,34 +3,22 @@
   become: true
   tasks:
     # Ubuntu tasks
-    - name: update repository index for Ubuntu
-      apt:
-        update_cache: yes
-      when: ansible_distribution == "Ubuntu"
-
-    - name: install apache2 package on Ubuntu
-      apt:
-        name: apache2
+    - name: install apache and php packages on Ubtunu
+      package:
+        name:
+          - apache2
+          - libapache2-mod-php
         state: latest
-      when: ansible_distribution == "Ubuntu"
+        update_cache: no
+      when: ansible_distribuation == "Ubuntu"
 
-    - name: add php support for apache on Ubuntu
-      apt:
-        name: libapache2-mod-php
+    # CentOS tasks 
+- name: install apache and php packages on Centos
+      package:
+        name:
+          - httpd
+          - php
         state: latest
-      when: ansible_distribution == "Ubuntu"
-
-    # CentOS tasks - NO repo update, direct install only
-    - name: install httpd package on CentOS
-      dnf:
-        name: httpd
-        state: present
         update_cache: no
-      when: ansible_distribution == "CentOS"
+      when: ansible_distribuation == "CentOS"
 
-    - name: add php support for apache on CentOS
-      dnf:
-        name: php
-        state: present
-        update_cache: no
-      when: ansible_distribution == "CentOS"
